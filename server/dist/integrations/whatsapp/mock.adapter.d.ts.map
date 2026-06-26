@@ -1,0 +1,1 @@
+{"version":3,"file":"mock.adapter.d.ts","sourceRoot":"","sources":["../../../src/integrations/whatsapp/mock.adapter.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,kBAAkB,EAAE,MAAM,sBAAsB,CAAC;AAE5E,qBAAa,mBAAoB,YAAW,gBAAgB;IACpD,WAAW,CAAC,OAAO,EAAE,kBAAkB,GAAG,OAAO,CAAC;QAAE,OAAO,EAAE,OAAO,CAAC;QAAC,SAAS,CAAC,EAAE,MAAM,CAAC;QAAC,KAAK,CAAC,EAAE,MAAM,CAAA;KAAE,CAAC;CAkBlH"}

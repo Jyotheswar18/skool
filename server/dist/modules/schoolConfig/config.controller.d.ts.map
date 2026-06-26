@@ -1,0 +1,1 @@
+{"version":3,"file":"config.controller.d.ts","sourceRoot":"","sources":["../../../src/modules/schoolConfig/config.controller.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAI5C,qBAAa,gBAAgB;IAC3B,MAAM,CAAC,GAAG,GAAU,KAAK,OAAO,EAAE,KAAK,QAAQ,mBAG7C;IAEF,MAAM,CAAC,MAAM,GAAU,KAAK,OAAO,EAAE,KAAK,QAAQ,mBAGhD;CACH"}

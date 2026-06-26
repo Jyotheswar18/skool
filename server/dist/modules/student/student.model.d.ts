@@ -8,6 +8,7 @@ export interface IStudentDocument extends Document {
     parentName: string;
     parentMobile: string;
     alternateMobile?: string;
+    parentEmail?: string;
     address?: string;
     joiningDate: Date;
     totalFee: number;

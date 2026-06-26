@@ -11,7 +11,7 @@ export declare class EventService {
      */
     static publishEvent: (id: string) => Promise<IEventDocument | null>;
     /**
-     * Resolves target students and broadcasts WhatsApp event messages to unique parents
+     * Resolves target students and broadcasts SMS event messages to unique parents
      */
     private static broadcastEventToAudience;
     static queryEvents: (query: PaginationQuery & {

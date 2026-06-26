@@ -65,4 +65,10 @@ router.post(
   asyncHandler(EventController.uploadMedia)
 );
 
+router.delete(
+  '/:id/media/:mediaId',
+  requireRole('admin'),
+  asyncHandler(EventController.deleteMedia)
+);
+
 export default router;

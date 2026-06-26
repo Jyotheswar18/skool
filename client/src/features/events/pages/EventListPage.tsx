@@ -37,13 +37,13 @@ export const EventListPage: React.FC = () => {
     },
   });
 
-  // Publish event mutation (Triggers WhatsApp Broadcast!)
+  // Publish event mutation (Triggers SMS Broadcast!)
   const publishMutation = useMutation({
     mutationFn: async (id: string) => {
       return apiClient.post(`/events/${id}/publish`);
     },
     onSuccess: () => {
-      message.success('Event published! WhatsApp celebration updates broadcasted to parents.');
+      message.success('Event published! SMS updates broadcasted to parents.');
       queryClient.invalidateQueries({ queryKey: ['events'] });
     },
     onError: (err: any) => {
@@ -65,7 +65,7 @@ export const EventListPage: React.FC = () => {
   const handlePublish = (record: Event) => {
     Modal.confirm({
       title: 'Publish and Broadcast Event?',
-      content: `Publishing "${record.title}" will immediately send a WhatsApp broadcast to all parents matching the target audience: ${record.targetAudience.type.toUpperCase()}.`,
+      content: `Publishing "${record.title}" will immediately send an SMS broadcast to all parents matching the target audience: ${record.targetAudience.type.toUpperCase()}.`,
       okText: 'Publish & Broadcast',
       okType: 'primary',
       cancelText: 'Cancel',

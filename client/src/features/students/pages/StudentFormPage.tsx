@@ -46,6 +46,7 @@ export const StudentFormPage: React.FC = () => {
           parentName: student.parentName,
           parentMobile: student.parentMobile,
           alternateMobile: student.alternateMobile,
+          parentEmail: student.parentEmail,
           address: student.address,
           joiningDate: dayjs(student.joiningDate),
           totalFee: student.totalFee,
@@ -71,7 +72,7 @@ export const StudentFormPage: React.FC = () => {
       return apiClient.post('/students', values);
     },
     onSuccess: () => {
-      message.success('Student onboarding successful. WhatsApp welcome message queued.');
+      message.success('Student onboarding successful. SMS welcome message queued.');
       navigate('/admin/students');
     },
     onError: (err: any) => {
@@ -130,7 +131,7 @@ export const StudentFormPage: React.FC = () => {
 
       <Form form={form} layout="vertical" onFinish={onFinish} requiredMark size="large">
         <Row gutter={24}>
-          <Col xs={24} lg={16}>
+          <Col xs={24}>
             <Card title="Student Information" className="premium-card" style={{ marginBottom: 24 }}>
               <Row gutter={16}>
                 <Col xs={24} sm={12}>
@@ -226,9 +227,9 @@ export const StudentFormPage: React.FC = () => {
                 <Col xs={24} sm={12}>
                   <Form.Item
                     name="parentMobile"
-                    label="Parent Mobile Number (WhatsApp)"
+                    label="Parent Mobile Number"
                     rules={[
-                      { required: true, message: 'WhatsApp mobile number is required' },
+                      { required: true, message: 'Parent mobile number is required' },
                       { pattern: /^[0-9]{10}$/, message: 'Must be a valid 10-digit number' },
                     ]}
                   >
@@ -248,15 +249,25 @@ export const StudentFormPage: React.FC = () => {
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="parentEmail"
+                    label="Parent Email Address"
+                    rules={[{ type: 'email', message: 'Must be a valid email address' }]}
+                  >
+                    <Input placeholder="Optional parent email" />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row gutter={16}>
+                <Col xs={24}>
                   <Form.Item name="address" label="Residential Address">
                     <Input.TextArea placeholder="Enter complete address" rows={2} />
                   </Form.Item>
                 </Col>
               </Row>
             </Card>
-          </Col>
 
-          <Col xs={24} lg={8}>
             <Card
               title="Fee Plan Structure"
               className="premium-card"
@@ -310,7 +321,7 @@ export const StudentFormPage: React.FC = () => {
                   {feeEndDate ? (
                     <span> Subsequent installments will be evenly distributed up to the Fee End Date.</span>
                   ) : (
-                    <span> Subsequent installments will be due at 30-day (1-month) intervals.</span>
+                    <span> Subsequent installments will be evenly distributed over the 10-month school year.</span>
                   )}
                 </div>
               )}
@@ -324,24 +335,22 @@ export const StudentFormPage: React.FC = () => {
                   const remainder = totalFee % numberOfInstallments;
 
                   const startDate = joiningDate.toDate ? joiningDate.toDate() : new Date(joiningDate);
-                  const endDate = feeEndDate ? (feeEndDate.toDate ? feeEndDate.toDate() : new Date(feeEndDate)) : null;
+                  const endDate = feeEndDate ? (feeEndDate.toDate ? feeEndDate.toDate() : new Date(feeEndDate)) : (() => {
+                    const d = new Date(startDate);
+                    d.setMonth(startDate.getMonth() + 9);
+                    return d;
+                  })();
 
-                  let intervalMs = 0;
-                  if (endDate) {
-                    const totalDuration = endDate.getTime() - startDate.getTime();
-                    intervalMs = numberOfInstallments > 1 ? totalDuration / (numberOfInstallments - 1) : 0;
-                  }
+                  const totalDuration = endDate.getTime() - startDate.getTime();
+                  const intervalMs = numberOfInstallments > 1 ? totalDuration / (numberOfInstallments - 1) : 0;
 
                   const preview = [];
                   for (let i = 0; i < numberOfInstallments; i++) {
                     let dueDate: Date;
-                    if (endDate && numberOfInstallments > 1) {
+                    if (numberOfInstallments > 1) {
                       dueDate = new Date(startDate.getTime() + intervalMs * i);
-                    } else if (endDate && numberOfInstallments === 1) {
-                      dueDate = new Date(startDate);
                     } else {
                       dueDate = new Date(startDate);
-                      dueDate.setMonth(startDate.getMonth() + i);
                     }
 
                     const amount = i === 0 ? baseAmount + remainder : baseAmount;
@@ -400,7 +409,7 @@ export const StudentFormPage: React.FC = () => {
                   Save Record
                 </Button>
                 <Button onClick={() => navigate('/admin/students')} block>
-                  Cancel
+                  ← Go Back
                 </Button>
               </Space>
             </Card>

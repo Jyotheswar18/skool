@@ -88,6 +88,36 @@ export class EventController {
     }
   };
 
+  static deleteMedia = async (req: AuthRequest, res: Response) => {
+    const id = req.params.id as string;
+    const mediaId = req.params.mediaId as string;
+
+    const event = await EventService.getEventById(id);
+    if (!event) {
+      return sendError(res, 'Event not found', 404, 'NOT_FOUND');
+    }
+
+    try {
+      const mediaItem = event.media.find((item: any) => item._id?.toString() === mediaId);
+      if (!mediaItem) {
+        return sendError(res, 'Media file not found in event', 404, 'NOT_FOUND');
+      }
+
+      // Delete from Cloudinary or local disk
+      if (mediaItem.publicId) {
+        await MediaService.deleteFile(mediaItem.publicId);
+      }
+
+      // Remove from event.media array
+      event.media = event.media.filter((item: any) => item._id?.toString() !== mediaId);
+      await event.save();
+
+      return sendSuccess(res, event, 'Media file removed successfully');
+    } catch (error: any) {
+      return sendError(res, error.message || 'Failed to delete media', 400);
+    }
+  };
+
   static list = async (req: AuthRequest, res: Response) => {
     const { events, pagination } = await EventService.queryEvents(req.query);
     return sendSuccess(res, events, 'Events list fetched successfully', 200, pagination);

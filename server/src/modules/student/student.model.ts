@@ -9,6 +9,7 @@ export interface IStudentDocument extends Document {
   parentName: string;
   parentMobile: string;
   alternateMobile?: string;
+  parentEmail?: string;
   address?: string;
   joiningDate: Date;
   totalFee: number;
@@ -59,6 +60,11 @@ const studentSchema = new Schema<IStudentDocument>(
     alternateMobile: {
       type: String,
       trim: true,
+    },
+    parentEmail: {
+      type: String,
+      trim: true,
+      lowercase: true,
     },
     address: {
       type: String,

@@ -14,7 +14,7 @@ export declare class FeeService {
      */
     static markPendingAsOverdue: () => Promise<number>;
     /**
-     * Scans and queues WhatsApp reminders based on due dates
+     * Scans and queues SMS reminders based on due dates
      */
     static sendScheduledReminders: () => Promise<void>;
     /**
@@ -74,7 +74,7 @@ export declare class FeeService {
         totalInstallments: number;
     }[]>;
     /**
-     * Send a manual WhatsApp fee reminder for a specific installment
+     * Send a manual SMS fee reminder for a specific installment
      */
     static sendManualFeeReminder: (installmentId: string) => Promise<{
         success: boolean;

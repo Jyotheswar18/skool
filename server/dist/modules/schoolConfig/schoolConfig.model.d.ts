@@ -6,8 +6,8 @@ export interface ISchoolConfigDocument extends Document {
     classes: string[];
     sections: string[];
     academicYear: string;
-    whatsapp: {
-        provider: 'mock' | 'wati' | 'twilio';
+    sms: {
+        provider: 'mock' | 'twilio';
         apiKey?: string;
         apiUrl?: string;
         senderNumber?: string;

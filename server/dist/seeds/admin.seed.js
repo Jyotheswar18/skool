@@ -56,7 +56,7 @@ const seedAdminAndConfig = async () => {
                 academicYear: '2026-27',
                 classes: constants_1.DEFAULT_CLASSES,
                 sections: constants_1.DEFAULT_SECTIONS,
-                whatsapp: {
+                sms: {
                     provider: 'mock',
                     enabled: true,
                 },

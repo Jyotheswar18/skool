@@ -54,7 +54,7 @@ EventService.publishEvent = async (id) => {
     return event;
 };
 /**
- * Resolves target students and broadcasts WhatsApp event messages to unique parents
+ * Resolves target students and broadcasts SMS event messages to unique parents
  */
 EventService.broadcastEventToAudience = async (event) => {
     const audType = event.targetAudience.type;
@@ -73,8 +73,7 @@ EventService.broadcastEventToAudience = async (event) => {
         return;
     // Track unique parent mobile numbers to prevent spamming parents with multiple kids
     const uniqueParentMobiles = new Set();
-    // First image/video media url to include in message
-    const mediaUrl = event.media.length > 0 ? event.media[0].url : undefined;
+    const mediaUrls = event.media.map((m) => m.url);
     for (const student of students) {
         const parentMobile = student.parentMobile;
         if (!parentMobile || uniqueParentMobiles.has(parentMobile))
@@ -85,9 +84,10 @@ EventService.broadcastEventToAudience = async (event) => {
             description: event.description || '',
             parentName: student.parentName,
             parentMobile: student.parentMobile,
+            parentEmail: student.parentEmail,
             studentId: student._id.toString(),
             eventId: event._id.toString(),
-            mediaUrl,
+            mediaUrls,
         }).catch((err) => console.error(`Failed to send event broadcast to parent of ${student.name}:`, err));
     }
 };

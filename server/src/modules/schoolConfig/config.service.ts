@@ -14,7 +14,8 @@ export class ConfigService {
         academicYear: '2026-27',
         classes: DEFAULT_CLASSES,
         sections: DEFAULT_SECTIONS,
-        whatsapp: {
+
+        sms: {
           provider: 'mock',
           enabled: true,
         },

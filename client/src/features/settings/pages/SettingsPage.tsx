@@ -42,12 +42,13 @@ export const SettingsPage: React.FC = () => {
       academicYear: values.academicYear,
       classes: values.classes.split(',').map((c: string) => c.trim()),
       sections: values.sections.split(',').map((s: string) => s.trim().toUpperCase()),
-      whatsapp: {
-        provider: values.whatsappProvider,
-        apiKey: values.whatsappApiKey,
-        apiUrl: values.whatsappApiUrl,
-        senderNumber: values.whatsappSenderNumber,
-        enabled: values.whatsappEnabled,
+
+      sms: {
+        provider: values.smsProvider || config?.sms?.provider || 'mock',
+        apiKey: values.smsApiKey || config?.sms?.apiKey || '',
+        apiUrl: values.smsApiUrl || config?.sms?.apiUrl || '',
+        senderNumber: values.smsSenderNumber || config?.sms?.senderNumber || '',
+        enabled: values.smsEnabled !== undefined ? values.smsEnabled : !!config?.sms?.enabled,
       },
       feeReminder: {
         daysBeforeDue: values.feeReminderDays,
@@ -72,11 +73,12 @@ export const SettingsPage: React.FC = () => {
         academicYear: config.academicYear,
         classes: config.classes.join(', '),
         sections: config.sections.join(', '),
-        whatsappProvider: config.whatsapp.provider,
-        whatsappApiKey: config.whatsapp.apiKey,
-        whatsappApiUrl: config.whatsapp.apiUrl,
-        whatsappSenderNumber: config.whatsapp.senderNumber,
-        whatsappEnabled: config.whatsapp.enabled,
+
+        smsProvider: config.sms?.provider || 'mock',
+        smsApiKey: config.sms?.apiKey || '',
+        smsApiUrl: config.sms?.apiUrl || '',
+        smsSenderNumber: config.sms?.senderNumber || '',
+        smsEnabled: !!config.sms?.enabled,
         feeReminderDays: config.feeReminder.daysBeforeDue,
         feeReminderOnDue: config.feeReminder.sendOnDueDate,
         feeReminderOverdueFreq: config.feeReminder.overdueFrequency,
@@ -98,7 +100,7 @@ export const SettingsPage: React.FC = () => {
     <div>
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#0f172a' }}>School Settings</h2>
-        <span style={{ color: '#475569' }}>Configure school profiles, sections, WhatsApp API configs, and billing scheduler parameters</span>
+        <span style={{ color: '#475569' }}>Configure school profiles, sections, SMS API configs, and billing scheduler parameters</span>
       </div>
 
       <Form form={form} layout="vertical" onFinish={onFinish} size="large">
@@ -163,50 +165,6 @@ export const SettingsPage: React.FC = () => {
               </Row>
             </Card>
 
-            <Card
-              title={
-                <Space>
-                  <BellOutlined style={{ color: '#0ea5e9' }} />
-                  <span>WhatsApp Business API Settings</span>
-                </Space>
-              }
-              className="premium-card"
-              style={{ marginBottom: 24 }}
-            >
-              <Row gutter={16}>
-                <Col xs={24} sm={12}>
-                  <Form.Item name="whatsappProvider" label="WhatsApp Service Provider">
-                    <Select>
-                      <Option value="mock">Mock Console Logging (For Demo)</Option>
-                      <Option value="wati">WATI API Partner</Option>
-                      <Option value="twilio">Twilio SMS/WhatsApp</Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item name="whatsappEnabled" label="Enable WhatsApp Automations" valuePropName="checked">
-                    <Switch checkedChildren="ON" unCheckedChildren="OFF" />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col xs={24} sm={12}>
-                  <Form.Item name="whatsappSenderNumber" label="WhatsApp Sender Phone ID">
-                    <Input placeholder="e.g. +91XXXXXXXXXX" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item name="whatsappApiUrl" label="API Endpoint URL">
-                    <Input placeholder="https://api.wati.io or custom" />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Form.Item name="whatsappApiKey" label="Authorization API Token / Key">
-                <Input.Password placeholder="Enter bearer authorization keys" />
-              </Form.Item>
-            </Card>
           </Col>
 
           <Col xs={24} lg={8}>

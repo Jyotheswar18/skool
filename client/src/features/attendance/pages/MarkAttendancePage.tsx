@@ -104,7 +104,7 @@ export const MarkAttendancePage: React.FC = () => {
       return apiClient.post('/attendance', payload);
     },
     onSuccess: () => {
-      message.success('Attendance saved successfully! Absence WhatsApp alerts triggered.');
+      message.success('Attendance saved successfully! Absence SMS alerts triggered.');
     },
     onError: (err: any) => {
       message.error(err.response?.data?.error?.message || 'Failed to submit attendance');

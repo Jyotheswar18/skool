@@ -5,24 +5,17 @@ const mock_adapter_1 = require("./mock.adapter");
 const wati_adapter_1 = require("./wati.adapter");
 const env_1 = require("../../config/env");
 class WhatsAppFactory {
-    static getAdapter() {
-        if (this.instance) {
-            return this.instance;
-        }
-        const provider = env_1.env.WHATSAPP_PROVIDER;
-        const apiKey = env_1.env.WHATSAPP_API_KEY || '';
-        const apiUrl = env_1.env.WHATSAPP_API_URL || '';
-        switch (provider) {
+    static getAdapter(provider, apiKey, apiUrl) {
+        const activeProvider = provider || env_1.env.WHATSAPP_PROVIDER;
+        const activeApiKey = apiKey !== undefined ? apiKey : (env_1.env.WHATSAPP_API_KEY || '');
+        const activeApiUrl = apiUrl !== undefined ? apiUrl : (env_1.env.WHATSAPP_API_URL || '');
+        switch (activeProvider) {
             case 'wati':
-                this.instance = new wati_adapter_1.WatiWhatsAppAdapter(apiKey, apiUrl);
-                break;
+                return new wati_adapter_1.WatiWhatsAppAdapter(activeApiKey, activeApiUrl);
             case 'mock':
             default:
-                this.instance = new mock_adapter_1.MockWhatsAppAdapter();
-                break;
+                return new mock_adapter_1.MockWhatsAppAdapter();
         }
-        console.log(`🔌 WhatsApp Notification system initialized with provider: [${provider}]`);
-        return this.instance;
     }
 }
 exports.WhatsAppFactory = WhatsAppFactory;

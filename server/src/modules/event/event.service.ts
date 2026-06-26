@@ -56,7 +56,7 @@ export class EventService {
   };
 
   /**
-   * Resolves target students and broadcasts WhatsApp event messages to unique parents
+   * Resolves target students and broadcasts SMS event messages to unique parents
    */
   private static broadcastEventToAudience = async (event: IEventDocument) => {
     const audType = event.targetAudience.type;
@@ -78,8 +78,7 @@ export class EventService {
     // Track unique parent mobile numbers to prevent spamming parents with multiple kids
     const uniqueParentMobiles = new Set<string>();
 
-    // First image/video media url to include in message
-    const mediaUrl = event.media.length > 0 ? event.media[0].url : undefined;
+    const mediaUrls = event.media.map((m) => m.url);
 
     for (const student of students) {
       const parentMobile = student.parentMobile;
@@ -92,9 +91,10 @@ export class EventService {
         description: event.description || '',
         parentName: student.parentName,
         parentMobile: student.parentMobile,
+        parentEmail: student.parentEmail,
         studentId: student._id.toString(),
         eventId: event._id.toString(),
-        mediaUrl,
+        mediaUrls,
       }).catch((err) =>
         console.error(`Failed to send event broadcast to parent of ${student.name}:`, err)
       );

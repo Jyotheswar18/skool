@@ -11,6 +11,7 @@ exports.createStudentSchema = zod_1.z.object({
         parentName: zod_1.z.string().min(2, 'Parent name is required').max(100),
         parentMobile: zod_1.z.string().regex(/^[0-9]{10}$/, 'Parent mobile number must be exactly 10 digits'),
         alternateMobile: zod_1.z.string().regex(/^[0-9]{10}$/, 'Alternate mobile number must be exactly 10 digits').optional().or(zod_1.z.literal('')),
+        parentEmail: zod_1.z.string().email('Invalid parent email format').optional().or(zod_1.z.literal('')),
         address: zod_1.z.string().max(500).optional(),
         joiningDate: zod_1.z.string().refine((val) => !isNaN(Date.parse(val)), {
             message: 'Invalid joining date format',
@@ -34,6 +35,7 @@ exports.updateStudentSchema = zod_1.z.object({
         parentName: zod_1.z.string().min(2, 'Parent name is required').max(100).optional(),
         parentMobile: zod_1.z.string().regex(/^[0-9]{10}$/, 'Parent mobile number must be exactly 10 digits').optional(),
         alternateMobile: zod_1.z.string().regex(/^[0-9]{10}$/, 'Alternate mobile number must be exactly 10 digits').optional().or(zod_1.z.literal('')),
+        parentEmail: zod_1.z.string().email('Invalid parent email format').optional().or(zod_1.z.literal('')),
         address: zod_1.z.string().max(500).optional(),
         joiningDate: zod_1.z.string().refine((val) => !isNaN(Date.parse(val)), {
             message: 'Invalid joining date format',

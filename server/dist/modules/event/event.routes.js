@@ -19,5 +19,6 @@ router.put('/:id', (0, role_middleware_1.requireRole)('admin'), (0, validate_mid
 router.delete('/:id', (0, role_middleware_1.requireRole)('admin'), (0, validate_middleware_1.validateRequest)(event_validation_1.getEventSchema), (0, asyncHandler_1.asyncHandler)(event_controller_1.EventController.delete));
 router.post('/:id/publish', (0, role_middleware_1.requireRole)('admin'), (0, validate_middleware_1.validateRequest)(event_validation_1.getEventSchema), (0, asyncHandler_1.asyncHandler)(event_controller_1.EventController.publish));
 router.post('/:id/media', (0, role_middleware_1.requireRole)('admin'), (0, upload_middleware_1.uploadMultiple)('media', 5), (0, asyncHandler_1.asyncHandler)(event_controller_1.EventController.uploadMedia));
+router.delete('/:id/media/:mediaId', (0, role_middleware_1.requireRole)('admin'), (0, asyncHandler_1.asyncHandler)(event_controller_1.EventController.deleteMedia));
 exports.default = router;
 //# sourceMappingURL=event.routes.js.map

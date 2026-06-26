@@ -16,11 +16,16 @@ const envSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string().optional().default(''),
   CLOUDINARY_API_KEY: z.string().optional().default(''),
   CLOUDINARY_API_SECRET: z.string().optional().default(''),
-  WHATSAPP_PROVIDER: z.enum(['mock', 'wati', 'twilio']).default('mock'),
-  WHATSAPP_API_KEY: z.string().optional().default(''),
-  WHATSAPP_API_URL: z.string().optional().default(''),
-  WHATSAPP_SENDER_NUMBER: z.string().optional().default(''),
+  SMS_PROVIDER: z.enum(['mock', 'twilio']).default('mock'),
+  SMS_API_KEY: z.string().optional().default(''),
+  SMS_API_URL: z.string().optional().default(''),
+  SMS_SENDER_NUMBER: z.string().optional().default(''),
   FRONTEND_URL: z.string().default('http://localhost:5173'),
+  SMTP_HOST: z.string().optional().default(''),
+  SMTP_PORT: z.string().optional().default('587'),
+  SMTP_USER: z.string().optional().default(''),
+  SMTP_PASS: z.string().optional().default(''),
+  SMTP_FROM: z.string().optional().default(''),
 });
 
 const parsed = envSchema.safeParse(process.env);

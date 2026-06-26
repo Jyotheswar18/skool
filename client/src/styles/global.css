@@ -84,3 +84,8 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Event media upload dragger style */
+.event-dragger .ant-upload-drag {
+  height: 180px !important;
+}

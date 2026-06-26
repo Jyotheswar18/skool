@@ -81,7 +81,7 @@ export const NotificationCenterPage: React.FC = () => {
       title: 'Channel',
       dataIndex: 'channel',
       key: 'channel',
-      render: (text: string) => <Tag color="green">{text.toUpperCase()}</Tag>,
+      render: (text: string) => <Tag color="blue">{text.toUpperCase()}</Tag>,
     },
     {
       title: 'Status',
@@ -114,7 +114,7 @@ export const NotificationCenterPage: React.FC = () => {
     <div>
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#0f172a' }}>Notification Center</h2>
-        <span style={{ color: '#475569' }}>Centralized logs and delivery tracking for all outgoing WhatsApp automations</span>
+        <span style={{ color: '#475569' }}>Centralized logs and delivery tracking for all outgoing SMS automations</span>
       </div>
 
       {/* Stats row */}

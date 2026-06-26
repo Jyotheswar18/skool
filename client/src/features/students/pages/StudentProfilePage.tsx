@@ -187,7 +187,8 @@ export const StudentProfilePage: React.FC = () => {
           >
             <Descriptions bordered column={{ xs: 1, sm: 2 }}>
               <Descriptions.Item label="Parent / Guardian Name">{student.parentName}</Descriptions.Item>
-              <Descriptions.Item label="WhatsApp Contact">{student.parentMobile}</Descriptions.Item>
+              <Descriptions.Item label="Parent Contact">{student.parentMobile}</Descriptions.Item>
+              <Descriptions.Item label="Parent Email">{student.parentEmail || 'N/A'}</Descriptions.Item>
               <Descriptions.Item label="Alternate Number">{student.alternateMobile || 'N/A'}</Descriptions.Item>
             </Descriptions>
           </Card>

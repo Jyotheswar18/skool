@@ -9,8 +9,8 @@ exports.updateConfigSchema = zod_1.z.object({
         classes: zod_1.z.array(zod_1.z.string()).min(1, 'At least one class is required').optional(),
         sections: zod_1.z.array(zod_1.z.string().toUpperCase()).min(1, 'At least one section is required').optional(),
         academicYear: zod_1.z.string().min(1, 'Academic year is required').optional(),
-        whatsapp: zod_1.z.object({
-            provider: zod_1.z.enum(['mock', 'wati', 'twilio']),
+        sms: zod_1.z.object({
+            provider: zod_1.z.enum(['mock', 'twilio']),
             apiKey: zod_1.z.string().optional().or(zod_1.z.literal('')),
             apiUrl: zod_1.z.string().optional().or(zod_1.z.literal('')),
             senderNumber: zod_1.z.string().optional().or(zod_1.z.literal('')),

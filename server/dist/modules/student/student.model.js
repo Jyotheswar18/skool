@@ -74,6 +74,11 @@ const studentSchema = new mongoose_1.Schema({
         type: String,
         trim: true,
     },
+    parentEmail: {
+        type: String,
+        trim: true,
+        lowercase: true,
+    },
     address: {
         type: String,
         trim: true,

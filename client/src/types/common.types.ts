@@ -21,6 +21,7 @@ export interface Student {
   parentName: string;
   parentMobile: string;
   alternateMobile?: string;
+  parentEmail?: string;
   address?: string;
   joiningDate: string;
   totalFee: number;
@@ -103,7 +104,7 @@ export interface NotificationLog {
   };
   message: string;
   mediaUrls: string[];
-  channel: 'whatsapp';
+  channel: 'sms';
   status: 'queued' | 'sent' | 'delivered' | 'failed';
   errorMessage?: string;
   relatedEntity?: {
@@ -121,8 +122,9 @@ export interface SchoolConfig {
   classes: string[];
   sections: string[];
   academicYear: string;
-  whatsapp: {
-    provider: 'mock' | 'wati' | 'twilio';
+
+  sms: {
+    provider: 'mock' | 'twilio';
     apiKey?: string;
     apiUrl?: string;
     senderNumber?: string;

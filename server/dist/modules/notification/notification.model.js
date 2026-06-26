@@ -44,6 +44,7 @@ const notificationSchema = new mongoose_1.Schema({
     recipient: {
         name: { type: String, required: true },
         phone: { type: String, required: true },
+        email: { type: String },
         studentId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Student' },
     },
     message: {
@@ -56,8 +57,8 @@ const notificationSchema = new mongoose_1.Schema({
     },
     channel: {
         type: String,
-        enum: ['whatsapp'],
-        default: 'whatsapp',
+        enum: ['sms', 'email'],
+        default: 'sms',
     },
     status: {
         type: String,

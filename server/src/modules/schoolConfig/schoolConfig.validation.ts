@@ -7,8 +7,9 @@ export const updateConfigSchema = z.object({
     classes: z.array(z.string()).min(1, 'At least one class is required').optional(),
     sections: z.array(z.string().toUpperCase()).min(1, 'At least one section is required').optional(),
     academicYear: z.string().min(1, 'Academic year is required').optional(),
-    whatsapp: z.object({
-      provider: z.enum(['mock', 'wati', 'twilio']),
+
+    sms: z.object({
+      provider: z.enum(['mock', 'twilio']),
       apiKey: z.string().optional().or(z.literal('')),
       apiUrl: z.string().optional().or(z.literal('')),
       senderNumber: z.string().optional().or(z.literal('')),

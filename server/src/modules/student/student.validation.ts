@@ -9,6 +9,7 @@ export const createStudentSchema = z.object({
     parentName: z.string().min(2, 'Parent name is required').max(100),
     parentMobile: z.string().regex(/^[0-9]{10}$/, 'Parent mobile number must be exactly 10 digits'),
     alternateMobile: z.string().regex(/^[0-9]{10}$/, 'Alternate mobile number must be exactly 10 digits').optional().or(z.literal('')),
+    parentEmail: z.string().email('Invalid parent email format').optional().or(z.literal('')),
     address: z.string().max(500).optional(),
     joiningDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: 'Invalid joining date format',
@@ -33,6 +34,7 @@ export const updateStudentSchema = z.object({
     parentName: z.string().min(2, 'Parent name is required').max(100).optional(),
     parentMobile: z.string().regex(/^[0-9]{10}$/, 'Parent mobile number must be exactly 10 digits').optional(),
     alternateMobile: z.string().regex(/^[0-9]{10}$/, 'Alternate mobile number must be exactly 10 digits').optional().or(z.literal('')),
+    parentEmail: z.string().email('Invalid parent email format').optional().or(z.literal('')),
     address: z.string().max(500).optional(),
     joiningDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: 'Invalid joining date format',

@@ -6,10 +6,9 @@ export declare const updateConfigSchema: z.ZodObject<{
         classes: z.ZodOptional<z.ZodArray<z.ZodString>>;
         sections: z.ZodOptional<z.ZodArray<z.ZodString>>;
         academicYear: z.ZodOptional<z.ZodString>;
-        whatsapp: z.ZodOptional<z.ZodObject<{
+        sms: z.ZodOptional<z.ZodObject<{
             provider: z.ZodEnum<{
                 mock: "mock";
-                wati: "wati";
                 twilio: "twilio";
             }>;
             apiKey: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<"">]>;

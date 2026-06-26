@@ -2,19 +2,20 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface INotificationDocument extends Document {
   _id: mongoose.Types.ObjectId;
-  type: 'onboarding' | 'fee_reminder' | 'fee_overdue' | 'attendance_alert' | 'event_broadcast';
+  type: 'onboarding' | 'fee_reminder' | 'fee_overdue' | 'attendance_alert' | 'event_broadcast' | 'marks_upload';
   recipient: {
     name: string;
     phone: string;
+    email?: string;
     studentId?: mongoose.Types.ObjectId;
   };
   message: string;
   mediaUrls: string[];
-  channel: 'whatsapp';
+  channel: 'sms' | 'email';
   status: 'queued' | 'sent' | 'delivered' | 'failed';
   errorMessage?: string;
   relatedEntity?: {
-    type: 'student' | 'installment' | 'attendance' | 'event';
+    type: 'student' | 'installment' | 'attendance' | 'event' | 'marks';
     id: mongoose.Types.ObjectId;
   };
   sentAt?: Date;
@@ -26,12 +27,13 @@ const notificationSchema = new Schema<INotificationDocument>(
   {
     type: {
       type: String,
-      enum: ['onboarding', 'fee_reminder', 'fee_overdue', 'attendance_alert', 'event_broadcast'],
+      enum: ['onboarding', 'fee_reminder', 'fee_overdue', 'attendance_alert', 'event_broadcast', 'marks_upload'],
       required: true,
     },
     recipient: {
       name: { type: String, required: true },
       phone: { type: String, required: true },
+      email: { type: String },
       studentId: { type: Schema.Types.ObjectId, ref: 'Student' },
     },
     message: {
@@ -44,8 +46,8 @@ const notificationSchema = new Schema<INotificationDocument>(
     },
     channel: {
       type: String,
-      enum: ['whatsapp'],
-      default: 'whatsapp',
+      enum: ['sms', 'email'],
+      default: 'sms',
     },
     status: {
       type: String,
@@ -58,7 +60,7 @@ const notificationSchema = new Schema<INotificationDocument>(
     relatedEntity: {
       type: {
         type: String,
-        enum: ['student', 'installment', 'attendance', 'event'],
+        enum: ['student', 'installment', 'attendance', 'event', 'marks'],
       },
       id: { type: Schema.Types.ObjectId },
     },

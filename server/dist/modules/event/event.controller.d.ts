@@ -7,6 +7,7 @@ export declare class EventController {
     static getDetails: (req: AuthRequest, res: Response) => Promise<void>;
     static publish: (req: AuthRequest, res: Response) => Promise<void>;
     static uploadMedia: (req: AuthRequest, res: Response) => Promise<void>;
+    static deleteMedia: (req: AuthRequest, res: Response) => Promise<void>;
     static list: (req: AuthRequest, res: Response) => Promise<void>;
 }
 //# sourceMappingURL=event.controller.d.ts.map

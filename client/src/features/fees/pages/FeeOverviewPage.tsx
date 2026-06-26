@@ -79,16 +79,16 @@ export const FeeOverviewPage: React.FC = () => {
     },
   });
 
-  // Send WhatsApp reminder mutation
+  // Send SMS reminder mutation
   const sendReminderMutation = useMutation({
     mutationFn: async (installmentId: string) => {
       return apiClient.post(`/fees/installments/${installmentId}/remind`);
     },
     onSuccess: (res: any) => {
-      message.success(res.data?.data?.message || 'WhatsApp reminder sent successfully');
+      message.success(res.data?.data?.message || 'SMS reminder sent successfully');
     },
     onError: (err: any) => {
-      message.error(err.response?.data?.error?.message || 'Failed to send WhatsApp reminder');
+      message.error(err.response?.data?.error?.message || 'Failed to send SMS reminder');
     },
   });
 
@@ -410,7 +410,7 @@ export const FeeOverviewPage: React.FC = () => {
                   <div style={{ fontSize: 14, fontWeight: 500, color: '#334155' }}>Class {selectedStudent.class}-{selectedStudent.section}</div>
                 </Col>
                 <Col span={12}>
-                  <div style={{ fontSize: 12, color: '#64748b' }}>Parent Mobile (WhatsApp)</div>
+                  <div style={{ fontSize: 12, color: '#64748b' }}>Parent Mobile</div>
                   <div style={{ fontSize: 14, fontWeight: 500, color: '#334155' }}>{selectedStudent.parentMobile}</div>
                 </Col>
               </Row>
@@ -469,51 +469,60 @@ export const FeeOverviewPage: React.FC = () => {
                 size="small"
                 columns={[
                   {
-                    title: 'Inst.',
+                    title: 'No.',
                     dataIndex: 'installmentNumber',
                     key: 'installmentNumber',
                     width: 60,
-                    render: (num: any) => `#${num}`,
                   },
                   {
                     title: 'Amount',
                     dataIndex: 'amount',
                     key: 'amount',
-                    render: (val: any) => `₹${val.toLocaleString('en-IN')}`,
+                    render: (val: any) => `₹${val}`,
                   },
                   {
                     title: 'Due Date',
                     dataIndex: 'dueDate',
                     key: 'dueDate',
-                    render: (date: any) => dayjs(date).format('DD MMM YYYY'),
+                    render: (date: any) => dayjs(date).format('D/M/YYYY'),
                   },
                   {
-                    title: 'Status',
+                    title: 'Payment Status',
                     dataIndex: 'status',
                     key: 'status',
-                    render: (status: any) => {
-                      if (status === 'paid') return <Tag color="success">Paid</Tag>;
-                      if (status === 'overdue') return <Tag color="error">Overdue</Tag>;
-                      return <Tag color="warning">Pending</Tag>;
+                    render: (status: string) => {
+                      let color = 'gold';
+                      if (status === 'paid') color = 'green';
+                      if (status === 'overdue') color = 'red';
+                      return <Tag color={color}>{status.toUpperCase()}</Tag>;
                     },
                   },
                   {
-                    title: 'Actions',
-                    key: 'actions',
+                    title: 'Paid Date',
+                    dataIndex: 'paidDate',
+                    key: 'paidDate',
+                    render: (date?: string) => (date ? dayjs(date).format('D/M/YYYY') : '-'),
+                  },
+                  {
+                    title: 'Notes',
+                    dataIndex: 'notes',
+                    key: 'notes',
+                    render: (notes?: string) => notes || '-',
+                  },
+                  {
+                    title: 'Action',
+                    key: 'action',
                     render: (_, record: any) => {
                       if (record.status === 'paid') {
-                        return (
-                          <div style={{ fontSize: 11, color: '#64748b' }}>
-                            <div>Paid: {record.paidDate ? dayjs(record.paidDate).format('DD MMM YY') : 'N/A'}</div>
-                            {record.notes && <div style={{ fontStyle: 'italic' }}>"{record.notes}"</div>}
-                          </div>
-                        );
+                        return '-';
                       }
                       return (
                         <Space>
                           <Button
                             type="primary"
                             size="small"
+                            ghost
+                            icon={<CheckCircleOutlined />}
                             onClick={() => handlePayInstallment(record)}
                             loading={payInstallmentMutation.isPending}
                           >

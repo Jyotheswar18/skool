@@ -110,7 +110,7 @@ export const TeacherFormPage: React.FC = () => {
 
       <Form form={form} layout="vertical" onFinish={onFinish} requiredMark size="large">
         <Row gutter={24}>
-          <Col xs={24} lg={16}>
+          <Col xs={24}>
             <Card title="Account Profile Details" className="premium-card" style={{ marginBottom: 24 }}>
               <Row gutter={16}>
                 <Col xs={24} sm={12}>
@@ -234,9 +234,7 @@ export const TeacherFormPage: React.FC = () => {
                 </Col>
               </Row>
             </Card>
-          </Col>
 
-          <Col xs={24} lg={8}>
             <Card className="premium-card">
               <Space orientation="vertical" style={{ width: '100%' }}>
                 <Button
@@ -245,10 +243,10 @@ export const TeacherFormPage: React.FC = () => {
                   loading={createMutation.isPending || updateMutation.isPending}
                   block
                 >
-                  Save Account
+                  Save Record
                 </Button>
                 <Button onClick={() => navigate('/admin/teachers')} block>
-                  Cancel
+                  ← Go Back
                 </Button>
               </Space>
             </Card>

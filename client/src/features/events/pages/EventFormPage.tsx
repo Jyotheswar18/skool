@@ -155,13 +155,10 @@ export const EventFormPage: React.FC = () => {
 
   const uploadProps = {
     onRemove: (file: any) => {
-      const index = fileList.indexOf(file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
-      setFileList(newFileList);
+      setFileList((prev) => prev.filter((item) => item.uid !== file.uid));
     },
     beforeUpload: (file: any) => {
-      setFileList([...fileList, file]);
+      setFileList((prev) => [...prev, file]);
       return false; // Prevent automatic upload
     },
     fileList,
@@ -191,7 +188,7 @@ export const EventFormPage: React.FC = () => {
 
       <Form form={form} layout="vertical" onFinish={onFinish} requiredMark size="large">
         <Row gutter={24}>
-          <Col xs={24} lg={16}>
+          <Col xs={24}>
             <Card title="Event Details" className="premium-card" style={{ marginBottom: 24 }}>
               <Form.Item
                 name="title"
@@ -274,7 +271,7 @@ export const EventFormPage: React.FC = () => {
               <Card title="Upload Media Gallery (Images & Videos)" className="premium-card" style={{ marginBottom: 24 }}>
                 <Row gutter={24}>
                   <Col xs={24} md={12}>
-                    <Upload.Dragger {...uploadProps}>
+                    <Upload.Dragger {...uploadProps} className="event-dragger">
                       <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                       </p>
@@ -289,7 +286,7 @@ export const EventFormPage: React.FC = () => {
                       style={{ marginTop: 16 }}
                       block
                     >
-                      {uploading ? 'Uploading Files...' : 'Start Uploading Selected Files'}
+                      {uploading ? 'Uploading Photos...' : 'Upload Photos'}
                     </Button>
                   </Col>
 
@@ -330,11 +327,9 @@ export const EventFormPage: React.FC = () => {
                 </Row>
               </Card>
             )}
-          </Col>
 
-          <Col xs={24} lg={8}>
-            <Card className="premium-card">
-              <Space orientation="vertical" style={{ width: '100%' }}>
+            <Card className="premium-card" style={{ marginBottom: 24 }}>
+              <Space direction="vertical" style={{ width: '100%' }}>
                 <Button
                   type="primary"
                   htmlType="submit"
@@ -344,7 +339,7 @@ export const EventFormPage: React.FC = () => {
                   {isEditMode ? 'Save Event Details' : 'Draft Event'}
                 </Button>
                 <Button onClick={() => navigate('/admin/events')} block>
-                  Cancel
+                  Go Back
                 </Button>
               </Space>
             </Card>

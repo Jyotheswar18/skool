@@ -75,6 +75,31 @@ EventController.uploadMedia = async (req, res) => {
         return (0, apiResponse_1.sendError)(res, error.message || 'Media upload failed', 400);
     }
 };
+EventController.deleteMedia = async (req, res) => {
+    const id = req.params.id;
+    const mediaId = req.params.mediaId;
+    const event = await event_service_1.EventService.getEventById(id);
+    if (!event) {
+        return (0, apiResponse_1.sendError)(res, 'Event not found', 404, 'NOT_FOUND');
+    }
+    try {
+        const mediaItem = event.media.find((item) => item._id?.toString() === mediaId);
+        if (!mediaItem) {
+            return (0, apiResponse_1.sendError)(res, 'Media file not found in event', 404, 'NOT_FOUND');
+        }
+        // Delete from Cloudinary or local disk
+        if (mediaItem.publicId) {
+            await media_service_1.MediaService.deleteFile(mediaItem.publicId);
+        }
+        // Remove from event.media array
+        event.media = event.media.filter((item) => item._id?.toString() !== mediaId);
+        await event.save();
+        return (0, apiResponse_1.sendSuccess)(res, event, 'Media file removed successfully');
+    }
+    catch (error) {
+        return (0, apiResponse_1.sendError)(res, error.message || 'Failed to delete media', 400);
+    }
+};
 EventController.list = async (req, res) => {
     const { events, pagination } = await event_service_1.EventService.queryEvents(req.query);
     return (0, apiResponse_1.sendSuccess)(res, events, 'Events list fetched successfully', 200, pagination);

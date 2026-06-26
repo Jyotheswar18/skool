@@ -54,7 +54,7 @@ FeeService.markPendingAsOverdue = async () => {
     return result.modifiedCount;
 };
 /**
- * Scans and queues WhatsApp reminders based on due dates
+ * Scans and queues SMS reminders based on due dates
  */
 FeeService.sendScheduledReminders = async () => {
     const today = attendance_service_1.AttendanceService.normalizeDate(new Date());
@@ -76,6 +76,7 @@ FeeService.sendScheduledReminders = async () => {
             studentName: student.name,
             parentName: student.parentName,
             parentMobile: student.parentMobile,
+            parentEmail: student.parentEmail,
             studentId: student._id.toString(),
             installmentId: inst._id.toString(),
             amount: inst.amount,
@@ -104,6 +105,7 @@ FeeService.sendScheduledReminders = async () => {
             studentName: student.name,
             parentName: student.parentName,
             parentMobile: student.parentMobile,
+            parentEmail: student.parentEmail,
             studentId: student._id.toString(),
             installmentId: inst._id.toString(),
             amount: inst.amount,
@@ -131,6 +133,7 @@ FeeService.sendScheduledReminders = async () => {
             studentName: student.name,
             parentName: student.parentName,
             parentMobile: student.parentMobile,
+            parentEmail: student.parentEmail,
             studentId: student._id.toString(),
             installmentId: inst._id.toString(),
             amount: inst.amount,
@@ -320,7 +323,7 @@ FeeService.getAllStudentsWithFeeStatus = async (filters) => {
     return result;
 };
 /**
- * Send a manual WhatsApp fee reminder for a specific installment
+ * Send a manual SMS fee reminder for a specific installment
  */
 FeeService.sendManualFeeReminder = async (installmentId) => {
     const installment = await installment_model_1.Installment.findById(installmentId).populate('student');
@@ -348,6 +351,7 @@ FeeService.sendManualFeeReminder = async (installmentId) => {
         studentName: student.name,
         parentName: student.parentName,
         parentMobile: student.parentMobile,
+        parentEmail: student.parentEmail,
         studentId: student._id.toString(),
         installmentId: installment._id.toString(),
         amount: installment.amount,
@@ -356,6 +360,7 @@ FeeService.sendManualFeeReminder = async (installmentId) => {
         reminderType,
         daysOverdue,
     });
-    return { success: true, message: `WhatsApp reminder sent to ${student.parentName} (${student.parentMobile})` };
+    const channelName = student.parentEmail ? 'Email' : 'SMS';
+    return { success: true, message: `${channelName} reminder sent to ${student.parentName} (${student.parentEmail || student.parentMobile})` };
 };
 //# sourceMappingURL=fee.service.js.map

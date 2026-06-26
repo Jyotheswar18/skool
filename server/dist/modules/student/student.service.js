@@ -15,7 +15,7 @@ class StudentService {
 exports.StudentService = StudentService;
 _a = StudentService;
 /**
- * Create a new student, auto-generate installments, and send onboarding WhatsApp message
+ * Create a new student, auto-generate installments, and send onboarding SMS message
  */
 StudentService.createStudent = async (studentData, creatorId) => {
     // 1. Save student record
@@ -67,8 +67,8 @@ StudentService.createStudent = async (studentData, creatorId) => {
             });
         }
         await installment_model_1.Installment.insertMany(installmentsToCreate);
-        // 3. Send Onboarding WhatsApp welcome message to parent (Non-blocking async)
-        notification_service_1.NotificationService.sendWelcomeMessage(student.name, student.class, student.section, student.totalFee, student.numberOfInstallments, student.parentName, student.parentMobile, student._id.toString()).catch((err) => console.error('Onboarding Welcome SMS failed:', err));
+        // 3. Send Onboarding SMS welcome message to parent (Non-blocking async)
+        notification_service_1.NotificationService.sendWelcomeMessage(student.name, student.class, student.section, student.totalFee, student.numberOfInstallments, student.parentName, student.parentMobile, student._id.toString(), student.parentEmail).catch((err) => console.error('Onboarding Welcome SMS failed:', err));
         return student;
     }
     catch (error) {

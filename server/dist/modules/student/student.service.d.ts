@@ -3,7 +3,7 @@ import { IStudentDocument } from './student.model';
 import { PaginationQuery } from '../../shared/types/common.types';
 export declare class StudentService {
     /**
-     * Create a new student, auto-generate installments, and send onboarding WhatsApp message
+     * Create a new student, auto-generate installments, and send onboarding SMS message
      */
     static createStudent: (studentData: any, creatorId: string) => Promise<IStudentDocument>;
     /**

@@ -7,7 +7,7 @@ import { PaginationQuery } from '../../shared/types/common.types';
 
 export class StudentService {
   /**
-   * Create a new student, auto-generate installments, and send onboarding WhatsApp message
+   * Create a new student, auto-generate installments, and send onboarding SMS message
    */
   static createStudent = async (studentData: any, creatorId: string): Promise<IStudentDocument> => {
     // 1. Save student record
@@ -23,31 +23,23 @@ export class StudentService {
       const baseAmount = Math.floor(totalFee / numberOfInstallments);
       const remainder = totalFee % numberOfInstallments; // Add remainder to first installment
 
-      const installmentsToCreate = [];
       const startDate = new Date(joiningDate);
+      const endDate = feeEndDate ? new Date(feeEndDate) : (() => {
+        const d = new Date(startDate);
+        d.setMonth(startDate.getMonth() + 9); // 10-month school year: last installment falls 9 months after joining date
+        return d;
+      })();
 
-      // Calculate interval between installments
-      let intervalMs: number;
-      if (feeEndDate) {
-        const endDate = new Date(feeEndDate);
-        const totalDuration = endDate.getTime() - startDate.getTime();
-        intervalMs = numberOfInstallments > 1 ? totalDuration / (numberOfInstallments - 1) : 0;
-      } else {
-        // Default: monthly intervals (30 days)
-        intervalMs = 30 * 24 * 60 * 60 * 1000;
-      }
+      const totalDuration = endDate.getTime() - startDate.getTime();
+      const intervalMs = numberOfInstallments > 1 ? totalDuration / (numberOfInstallments - 1) : 0;
 
+      const installmentsToCreate = [];
       for (let i = 0; i < numberOfInstallments; i++) {
         let dueDate: Date;
-        if (feeEndDate && numberOfInstallments > 1) {
-          // Evenly distribute between joiningDate and feeEndDate
+        if (numberOfInstallments > 1) {
           dueDate = new Date(startDate.getTime() + intervalMs * i);
-        } else if (feeEndDate && numberOfInstallments === 1) {
-          dueDate = new Date(startDate);
         } else {
-          // Monthly spacing fallback
           dueDate = new Date(startDate);
-          dueDate.setMonth(startDate.getMonth() + i);
         }
 
         // Adjust amount to clear remainders
@@ -64,7 +56,7 @@ export class StudentService {
 
       await Installment.insertMany(installmentsToCreate);
 
-      // 3. Send Onboarding WhatsApp welcome message to parent (Non-blocking async)
+      // 3. Send Onboarding SMS welcome message to parent (Non-blocking async)
       NotificationService.sendWelcomeMessage(
         student.name,
         student.class,
@@ -73,7 +65,8 @@ export class StudentService {
         student.numberOfInstallments,
         student.parentName,
         student.parentMobile,
-        student._id.toString()
+        student._id.toString(),
+        student.parentEmail
       ).catch((err) => console.error('Onboarding Welcome SMS failed:', err));
 
       return student;

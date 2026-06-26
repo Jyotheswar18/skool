@@ -56,10 +56,10 @@ export class AttendanceService {
 
     await Attendance.bulkWrite(bulkOps);
 
-    // Post-marking processes: Trigger absent alerts to parents
+    // Post-marking processes: Trigger attendance alerts to parents
     // We can execute this asynchronously to prevent blocking the HTTP thread
-    this.processAbsentAlerts(records, classVal, section, attendanceDate).catch((err) =>
-      console.error('Error triggering absent alerts:', err)
+    this.processAttendanceAlerts(records, classVal, section, attendanceDate).catch((err) =>
+      console.error('Error triggering attendance alerts:', err)
     );
 
     // Fetch the updated records to return
@@ -73,16 +73,15 @@ export class AttendanceService {
   };
 
   /**
-   * Asynchronously triggers WhatsApp alerts for absent students
+   * Asynchronously triggers alerts for all marked student attendance
    */
-  private static processAbsentAlerts = async (
+  private static processAttendanceAlerts = async (
     records: { student: string; status: 'present' | 'absent' | 'late' }[],
     classVal: string,
     section: string,
     attendanceDate: Date
   ) => {
-    const absentRecords = records.filter((r) => r.status === 'absent');
-    if (absentRecords.length === 0) return;
+    if (records.length === 0) return;
 
     const dateStr = attendanceDate.toLocaleDateString('en-IN', {
       day: 'numeric',
@@ -90,7 +89,12 @@ export class AttendanceService {
       year: 'numeric',
     });
 
-    for (const record of absentRecords) {
+    const timeStr = new Date().toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    for (const record of records) {
       const student = await Student.findById(record.student);
       if (!student || student.status !== 'active') continue;
 
@@ -98,17 +102,20 @@ export class AttendanceService {
       const attRecord = await Attendance.findOne({ student: student._id, date: attendanceDate });
       if (!attRecord) continue;
 
-      // Trigger absent alert
-      NotificationService.sendAbsentAlert(
+      // Trigger attendance alert (sends email if parentEmail present, else SMS)
+      NotificationService.sendAttendanceAlert(
         student.name,
         student.class,
         student.section,
         student.parentName,
         student.parentMobile,
         dateStr,
+        timeStr,
+        record.status,
         student._id.toString(),
-        attRecord._id.toString()
-      ).catch((err) => console.error(`Failed to send absent alert for ${student.name}:`, err));
+        attRecord._id.toString(),
+        student.parentEmail
+      ).catch((err) => console.error(`Failed to send attendance alert for ${student.name}:`, err));
     }
   };
 

@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 export declare class NotificationService {
     /**
-     * General-purpose notification sender & logger
+     * General-purpose notification sender & logger (supports Email and SMS)
      */
     static sendNotification: (options: {
         type: "onboarding" | "fee_reminder" | "fee_overdue" | "attendance_alert" | "event_broadcast";
         recipientName: string;
         recipientPhone: string;
+        recipientEmail?: string;
         studentId?: string;
         message: string;
         mediaUrls?: string[];
@@ -26,7 +27,7 @@ export declare class NotificationService {
     /**
      * Sends welcome onboarding message to parent
      */
-    static sendWelcomeMessage: (studentName: string, studentClass: string, studentSection: string, totalFee: number, installmentsCount: number, parentName: string, parentMobile: string, studentId: string) => Promise<mongoose.Document<unknown, {}, import("./notification.model").INotificationDocument, {}, mongoose.DefaultSchemaOptions> & import("./notification.model").INotificationDocument & Required<{
+    static sendWelcomeMessage: (studentName: string, studentClass: string, studentSection: string, totalFee: number, installmentsCount: number, parentName: string, parentMobile: string, studentId: string, parentEmail?: string) => Promise<mongoose.Document<unknown, {}, import("./notification.model").INotificationDocument, {}, mongoose.DefaultSchemaOptions> & import("./notification.model").INotificationDocument & Required<{
         _id: mongoose.Types.ObjectId;
     }> & {
         __v: number;
@@ -34,9 +35,19 @@ export declare class NotificationService {
         id: string;
     }>;
     /**
-     * Sends attendance alert for absent students
+     * Sends attendance alert for absent students (Wrapper for backwards compatibility)
      */
-    static sendAbsentAlert: (studentName: string, studentClass: string, studentSection: string, parentName: string, parentMobile: string, dateStr: string, studentId: string, attendanceId: string) => Promise<mongoose.Document<unknown, {}, import("./notification.model").INotificationDocument, {}, mongoose.DefaultSchemaOptions> & import("./notification.model").INotificationDocument & Required<{
+    static sendAbsentAlert: (studentName: string, studentClass: string, studentSection: string, parentName: string, parentMobile: string, dateStr: string, studentId: string, attendanceId: string, parentEmail?: string) => Promise<mongoose.Document<unknown, {}, import("./notification.model").INotificationDocument, {}, mongoose.DefaultSchemaOptions> & import("./notification.model").INotificationDocument & Required<{
+        _id: mongoose.Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
+        id: string;
+    }>;
+    /**
+     * Sends attendance alert to parent (for present, late, or absent status)
+     */
+    static sendAttendanceAlert: (studentName: string, studentClass: string, studentSection: string, parentName: string, parentMobile: string, dateStr: string, timeStr: string, status: "present" | "absent" | "late", studentId: string, attendanceId: string, parentEmail?: string) => Promise<mongoose.Document<unknown, {}, import("./notification.model").INotificationDocument, {}, mongoose.DefaultSchemaOptions> & import("./notification.model").INotificationDocument & Required<{
         _id: mongoose.Types.ObjectId;
     }> & {
         __v: number;
@@ -50,6 +61,7 @@ export declare class NotificationService {
         studentName: string;
         parentName: string;
         parentMobile: string;
+        parentEmail?: string;
         studentId: string;
         installmentId: string;
         amount: number;
@@ -72,9 +84,10 @@ export declare class NotificationService {
         description: string;
         parentName: string;
         parentMobile: string;
+        parentEmail?: string;
         studentId: string;
         eventId: string;
-        mediaUrl?: string;
+        mediaUrls?: string[];
     }) => Promise<mongoose.Document<unknown, {}, import("./notification.model").INotificationDocument, {}, mongoose.DefaultSchemaOptions> & import("./notification.model").INotificationDocument & Required<{
         _id: mongoose.Types.ObjectId;
     }> & {

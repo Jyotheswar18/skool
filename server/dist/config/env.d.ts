@@ -11,10 +11,15 @@ export declare const env: {
     CLOUDINARY_CLOUD_NAME: string;
     CLOUDINARY_API_KEY: string;
     CLOUDINARY_API_SECRET: string;
-    WHATSAPP_PROVIDER: "mock" | "wati" | "twilio";
-    WHATSAPP_API_KEY: string;
-    WHATSAPP_API_URL: string;
-    WHATSAPP_SENDER_NUMBER: string;
+    SMS_PROVIDER: "mock" | "twilio";
+    SMS_API_KEY: string;
+    SMS_API_URL: string;
+    SMS_SENDER_NUMBER: string;
     FRONTEND_URL: string;
+    SMTP_HOST: string;
+    SMTP_PORT: string;
+    SMTP_USER: string;
+    SMTP_PASS: string;
+    SMTP_FROM: string;
 };
 //# sourceMappingURL=env.d.ts.map

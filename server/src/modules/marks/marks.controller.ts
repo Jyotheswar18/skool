@@ -3,6 +3,7 @@ import { AuthRequest } from '../../shared/types/common.types';
 import { Student } from '../student/student.model';
 import { Marks } from './marks.model';
 import { sendSuccess, sendError } from '../../shared/utils/apiResponse';
+import { NotificationService } from '../notification/notification.service';
 
 export class MarksController {
   /**
@@ -136,7 +137,44 @@ export class MarksController {
         );
       });
 
-      await Promise.all(bulkOperations);
+      const savedMarks = await Promise.all(bulkOperations);
+
+      // Send email notifications to parents (non-blocking)
+      const studentIds = students
+        .filter((s: any) => s.marksObtained !== null && s.marksObtained !== undefined)
+        .map((s: any) => s.studentId);
+
+      if (studentIds.length > 0) {
+        Student.find({ _id: { $in: studentIds }, status: 'active' })
+          .then((studentRecords) => {
+            for (const studentRecord of studentRecords) {
+              const marksEntry = students.find(
+                (s: any) => s.studentId === studentRecord._id.toString()
+              );
+              const savedMark = savedMarks.find(
+                (m: any) => m && m.student.toString() === studentRecord._id.toString()
+              );
+              if (!marksEntry || marksEntry.marksObtained === null || marksEntry.marksObtained === undefined) continue;
+
+              NotificationService.sendMarksAlert({
+                studentName: studentRecord.name,
+                parentName: studentRecord.parentName,
+                parentMobile: studentRecord.parentMobile,
+                parentEmail: studentRecord.parentEmail,
+                studentId: studentRecord._id.toString(),
+                marksId: savedMark ? savedMark._id.toString() : studentRecord._id.toString(),
+                subject,
+                examName,
+                marksObtained: marksEntry.marksObtained,
+                maxMarks,
+                comments: marksEntry.comments || '',
+                studentClass: cls,
+                studentSection: sec,
+              }).catch((err) => console.error(`Failed to send marks email for ${studentRecord.name}:`, err));
+            }
+          })
+          .catch((err) => console.error('Failed to fetch students for marks notification:', err));
+      }
 
       return sendSuccess(res, null, 'Marks uploaded successfully');
     } catch (error: any) {

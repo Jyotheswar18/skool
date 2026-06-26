@@ -60,10 +60,10 @@ const schoolConfigSchema = new mongoose_1.Schema({
         default: '2026-27',
         trim: true,
     },
-    whatsapp: {
+    sms: {
         provider: {
             type: String,
-            enum: ['mock', 'wati', 'twilio'],
+            enum: ['mock', 'twilio'],
             default: 'mock',
         },
         apiKey: {
@@ -77,7 +77,7 @@ const schoolConfigSchema = new mongoose_1.Schema({
         },
         enabled: {
             type: Boolean,
-            default: true,
+            default: false,
         },
     },
     feeReminder: {

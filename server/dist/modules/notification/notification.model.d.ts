@@ -5,11 +5,12 @@ export interface INotificationDocument extends Document {
     recipient: {
         name: string;
         phone: string;
+        email?: string;
         studentId?: mongoose.Types.ObjectId;
     };
     message: string;
     mediaUrls: string[];
-    channel: 'whatsapp';
+    channel: 'sms' | 'email';
     status: 'queued' | 'sent' | 'delivered' | 'failed';
     errorMessage?: string;
     relatedEntity?: {

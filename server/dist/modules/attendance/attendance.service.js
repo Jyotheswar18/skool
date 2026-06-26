@@ -52,9 +52,9 @@ AttendanceService.markAttendance = async (classVal, section, dateStr, records, m
         };
     });
     await attendance_model_1.Attendance.bulkWrite(bulkOps);
-    // Post-marking processes: Trigger absent alerts to parents
+    // Post-marking processes: Trigger attendance alerts to parents
     // We can execute this asynchronously to prevent blocking the HTTP thread
-    _a.processAbsentAlerts(records, classVal, section, attendanceDate).catch((err) => console.error('Error triggering absent alerts:', err));
+    _a.processAttendanceAlerts(records, classVal, section, attendanceDate).catch((err) => console.error('Error triggering attendance alerts:', err));
     // Fetch the updated records to return
     const results = await attendance_model_1.Attendance.find({
         class: classVal,
@@ -64,18 +64,21 @@ AttendanceService.markAttendance = async (classVal, section, dateStr, records, m
     return results;
 };
 /**
- * Asynchronously triggers WhatsApp alerts for absent students
+ * Asynchronously triggers alerts for all marked student attendance
  */
-AttendanceService.processAbsentAlerts = async (records, classVal, section, attendanceDate) => {
-    const absentRecords = records.filter((r) => r.status === 'absent');
-    if (absentRecords.length === 0)
+AttendanceService.processAttendanceAlerts = async (records, classVal, section, attendanceDate) => {
+    if (records.length === 0)
         return;
     const dateStr = attendanceDate.toLocaleDateString('en-IN', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
     });
-    for (const record of absentRecords) {
+    const timeStr = new Date().toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+    for (const record of records) {
         const student = await student_model_1.Student.findById(record.student);
         if (!student || student.status !== 'active')
             continue;
@@ -83,8 +86,8 @@ AttendanceService.processAbsentAlerts = async (records, classVal, section, atten
         const attRecord = await attendance_model_1.Attendance.findOne({ student: student._id, date: attendanceDate });
         if (!attRecord)
             continue;
-        // Trigger absent alert
-        notification_service_1.NotificationService.sendAbsentAlert(student.name, student.class, student.section, student.parentName, student.parentMobile, dateStr, student._id.toString(), attRecord._id.toString()).catch((err) => console.error(`Failed to send absent alert for ${student.name}:`, err));
+        // Trigger attendance alert (sends email if parentEmail present, else SMS)
+        notification_service_1.NotificationService.sendAttendanceAlert(student.name, student.class, student.section, student.parentName, student.parentMobile, dateStr, timeStr, record.status, student._id.toString(), attRecord._id.toString(), student.parentEmail).catch((err) => console.error(`Failed to send attendance alert for ${student.name}:`, err));
     }
 };
 /**

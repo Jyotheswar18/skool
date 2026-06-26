@@ -7,8 +7,8 @@ export interface ISchoolConfigDocument extends Document {
   classes: string[];
   sections: string[];
   academicYear: string;
-  whatsapp: {
-    provider: 'mock' | 'wati' | 'twilio';
+  sms: {
+    provider: 'mock' | 'twilio';
     apiKey?: string;
     apiUrl?: string;
     senderNumber?: string;
@@ -53,10 +53,11 @@ const schoolConfigSchema = new Schema<ISchoolConfigDocument>(
       default: '2026-27',
       trim: true,
     },
-    whatsapp: {
+
+    sms: {
       provider: {
         type: String,
-        enum: ['mock', 'wati', 'twilio'],
+        enum: ['mock', 'twilio'],
         default: 'mock',
       },
       apiKey: {
@@ -70,7 +71,7 @@ const schoolConfigSchema = new Schema<ISchoolConfigDocument>(
       },
       enabled: {
         type: Boolean,
-        default: true,
+        default: false,
       },
     },
     feeReminder: {

@@ -8,6 +8,7 @@ export declare const createStudentSchema: z.ZodObject<{
         parentName: z.ZodString;
         parentMobile: z.ZodString;
         alternateMobile: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<"">]>;
+        parentEmail: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<"">]>;
         address: z.ZodOptional<z.ZodString>;
         joiningDate: z.ZodString;
         totalFee: z.ZodNumber;
@@ -30,6 +31,7 @@ export declare const updateStudentSchema: z.ZodObject<{
         parentName: z.ZodOptional<z.ZodString>;
         parentMobile: z.ZodOptional<z.ZodString>;
         alternateMobile: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<"">]>;
+        parentEmail: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<"">]>;
         address: z.ZodOptional<z.ZodString>;
         joiningDate: z.ZodOptional<z.ZodString>;
         totalFee: z.ZodOptional<z.ZodNumber>;

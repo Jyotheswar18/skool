@@ -13,9 +13,9 @@ export declare class AttendanceService {
         status: "present" | "absent" | "late";
     }[], markedById: string, isTeacher: boolean) => Promise<any[]>;
     /**
-     * Asynchronously triggers WhatsApp alerts for absent students
+     * Asynchronously triggers alerts for all marked student attendance
      */
-    private static processAbsentAlerts;
+    private static processAttendanceAlerts;
     /**
      * List attendance logs based on filters
      */

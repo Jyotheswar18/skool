@@ -59,7 +59,7 @@ export class FeeService {
   };
 
   /**
-   * Scans and queues WhatsApp reminders based on due dates
+   * Scans and queues SMS reminders based on due dates
    */
   static sendScheduledReminders = async (): Promise<void> => {
     const today = AttendanceService.normalizeDate(new Date());
@@ -84,6 +84,7 @@ export class FeeService {
         studentName: student.name,
         parentName: student.parentName,
         parentMobile: student.parentMobile,
+        parentEmail: student.parentEmail,
         studentId: student._id.toString(),
         installmentId: inst._id.toString(),
         amount: inst.amount,
@@ -116,6 +117,7 @@ export class FeeService {
         studentName: student.name,
         parentName: student.parentName,
         parentMobile: student.parentMobile,
+        parentEmail: student.parentEmail,
         studentId: student._id.toString(),
         installmentId: inst._id.toString(),
         amount: inst.amount,
@@ -147,6 +149,7 @@ export class FeeService {
         studentName: student.name,
         parentName: student.parentName,
         parentMobile: student.parentMobile,
+        parentEmail: student.parentEmail,
         studentId: student._id.toString(),
         installmentId: inst._id.toString(),
         amount: inst.amount,
@@ -370,7 +373,7 @@ export class FeeService {
   };
 
   /**
-   * Send a manual WhatsApp fee reminder for a specific installment
+   * Send a manual SMS fee reminder for a specific installment
    */
   static sendManualFeeReminder = async (installmentId: string) => {
     const installment = await Installment.findById(installmentId).populate('student');
@@ -406,6 +409,7 @@ export class FeeService {
       studentName: student.name,
       parentName: student.parentName,
       parentMobile: student.parentMobile,
+      parentEmail: student.parentEmail,
       studentId: student._id.toString(),
       installmentId: installment._id.toString(),
       amount: installment.amount,
@@ -415,6 +419,7 @@ export class FeeService {
       daysOverdue,
     });
 
-    return { success: true, message: `WhatsApp reminder sent to ${student.parentName} (${student.parentMobile})` };
+    const channelName = student.parentEmail ? 'Email' : 'SMS';
+    return { success: true, message: `${channelName} reminder sent to ${student.parentName} (${student.parentEmail || student.parentMobile})` };
   };
 }

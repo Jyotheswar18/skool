@@ -8,6 +8,7 @@
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "seed": "ts-node -r tsconfig-paths/register src/seeds/admin.seed.ts",
+    "seed:mock": "ts-node -r tsconfig-paths/register src/seeds/mockData.seed.ts",
     "test": "jest"
   },
   "keywords": [],
